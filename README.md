@@ -274,4 +274,30 @@ project/
 
 ---
 
+---
+
+## Configuration des variables d’environnement (.env)
+
+Afin de sécuriser les informations sensibles (identifiants, mot de passe, URI MongoDB), la connexion à MongoDB est configurée via un fichier `.env`.
+
+Cette méthode permet :
+
+- De ne pas exposer les identifiants dans le code source
+- De faciliter la configuration selon l’environnement (développement, production)
+- D’améliorer la sécurité du projet
+
+---
+
+### Création du fichier `.env`
+
+Créer un fichier `.env` à la racine du projet :
+Description des variables
+
+MONGO_URI : Chaîne de connexion à MongoDB
+
+MONGO_DB_NAME : Nom de la base de données cible
+
+MONGO_COLLECTION : Nom de la collection dans laquelle les documents seront insérés
+
+
 Le projet est maintenant prêt à être exécuté dans un environnement propre, isolé et reproductible.
