@@ -247,7 +247,12 @@ mongodb://admin:admin123@localhost:27017/
 ```
 
 ---
-
+## git Hub 
+ deux branch sont créer un main et l'autre no-pandas 
+ dans main j'utilise pandas dans no-pandas je n'utilise pas pandas pour changer de branch 
+ ```bash 
+ git checkout (suivi du nom de la branch )
+ ```
 # 4 Déroulement
 
 ## Étapes de la migration
