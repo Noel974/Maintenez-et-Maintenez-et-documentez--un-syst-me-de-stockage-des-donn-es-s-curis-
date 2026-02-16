@@ -1,5 +1,4 @@
-import pandas as pd
-import re
+import csv
 import sys
 
 CSV_FILE = "data/healthcare_dataset.csv"
@@ -8,10 +7,9 @@ CSV_FILE = "data/healthcare_dataset.csv"
 # CONFIGURATION
 # ==============================
 
-# ⚠️ Adapte les colonnes selon ton vrai CSV
 EXPECTED_COLUMNS = {
     "Name": "object",
-    "Age": "int64",
+    "Age": "int",
     "Gender": "object",
     "Blood Type": "object",
     "Medical Condition": "object",
@@ -19,8 +17,8 @@ EXPECTED_COLUMNS = {
     "Doctor": "object",
     "Hospital": "object",
     "Insurance Provider": "object",
-    "Billing Amount": "float64",
-    "Room Number": "int64",
+    "Billing Amount": "float",
+    "Room Number": "int",
     "Admission Type": "object",
     "Discharge Date": "object",
     "Medication": "object",
@@ -31,10 +29,10 @@ EXPECTED_COLUMNS = {
 # FONCTIONS DE VALIDATION
 # ==============================
 
-def check_columns(df):
+def check_columns(header):
     print("\n--- Vérification des colonnes ---")
-    missing = set(EXPECTED_COLUMNS.keys()) - set(df.columns)
-    extra = set(df.columns) - set(EXPECTED_COLUMNS.keys())
+    missing = set(EXPECTED_COLUMNS.keys()) - set(header)
+    extra = set(header) - set(EXPECTED_COLUMNS.keys())
 
     if missing:
         print("❌ Colonnes manquantes :", missing)
@@ -45,44 +43,86 @@ def check_columns(df):
         print("⚠️ Colonnes supplémentaires :", extra)
 
 
-def check_types(df):
+def convert_value(value, expected_type):
+    if expected_type == "int":
+        try:
+            return int(value)
+        except:
+            return None
+    if expected_type == "float":
+        try:
+            return float(value)
+        except:
+            return None
+    return value  # object → string
+
+
+def check_types(rows):
     print("\n--- Vérification des types ---")
     for col, expected_type in EXPECTED_COLUMNS.items():
-        if col in df.columns:
-            actual_type = str(df[col].dtype)
-            if actual_type != expected_type:
-                print(f"⚠️ Type différent pour {col} : {actual_type} (attendu : {expected_type})")
-            else:
-                print(f"✅ Type correct pour {col}")
+        incorrect = 0
+        for row in rows:
+            value = row[col]
+            converted = convert_value(value, expected_type)
+            if converted is None and value != "":
+                incorrect += 1
+
+        if incorrect > 0:
+            print(f"⚠️ Type incorrect dans {col} : {incorrect} valeur(s) invalide(s)")
+        else:
+            print(f"✅ Type correct pour {col}")
 
 
-def check_missing_values(df):
+def check_missing_values(rows):
     print("\n--- Vérification des valeurs manquantes ---")
-    missing = df.isnull().sum()
-    for col, count in missing.items():
+    missing_counts = {col: 0 for col in EXPECTED_COLUMNS}
+
+    for row in rows:
+        for col in EXPECTED_COLUMNS:
+            if row[col] == "" or row[col] is None:
+                missing_counts[col] += 1
+
+    for col, count in missing_counts.items():
         if count > 0:
             print(f"❌ {count} valeur(s) manquante(s) dans {col}")
         else:
             print(f"✅ Pas de valeur manquante dans {col}")
 
 
-def check_duplicates(df):
+def check_duplicates(rows):
     print("\n--- Vérification des doublons ---")
-    duplicates = df.duplicated().sum()
+    seen = set()
+    duplicates = 0
+
+    for row in rows:
+        row_tuple = tuple(row.items())
+        if row_tuple in seen:
+            duplicates += 1
+        else:
+            seen.add(row_tuple)
+
     if duplicates > 0:
         print(f"❌ {duplicates} ligne(s) en doublon détectée(s)")
     else:
         print("✅ Aucun doublon détecté")
 
 
-def check_age_validity(df):
-    if "Age" in df.columns:
-        print("\n--- Vérification des âges ---")
-        invalid_age = df[(df["Age"] < 0) | (df["Age"] > 120)]
-        if len(invalid_age) > 0:
-            print(f"❌ {len(invalid_age)} âge(s) invalide(s)")
-        else:
-            print("✅ Tous les âges sont plausibles")
+def check_age_validity(rows):
+    print("\n--- Vérification des âges ---")
+    invalid = 0
+
+    for row in rows:
+        try:
+            age = int(row["Age"])
+            if age < 0 or age > 120:
+                invalid += 1
+        except:
+            invalid += 1
+
+    if invalid > 0:
+        print(f"❌ {invalid} âge(s) invalide(s)")
+    else:
+        print("✅ Tous les âges sont plausibles")
 
 
 # ==============================
@@ -93,7 +133,11 @@ def main():
     print("Chargement du fichier CSV...")
 
     try:
-        df = pd.read_csv(CSV_FILE)
+        with open(CSV_FILE, newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            header = reader.fieldnames
+            rows = list(reader)
+
     except FileNotFoundError:
         print("❌ Fichier introuvable :", CSV_FILE)
         sys.exit(1)
@@ -101,16 +145,17 @@ def main():
         print("❌ Erreur lors du chargement :", e)
         sys.exit(1)
 
-    print("Nombre de lignes :", len(df))
-    print("Nombre de colonnes :", len(df.columns))
+    print("Nombre de lignes :", len(rows))
+    print("Nombre de colonnes :", len(header))
 
-    check_columns(df)
-    check_types(df)
-    check_missing_values(df)
-    check_duplicates(df)
-    check_age_validity(df)
+    check_columns(header)
+    check_types(rows)
+    check_missing_values(rows)
+    check_duplicates(rows)
+    check_age_validity(rows)
 
     print("\n✅ Analyse terminée")
+
 
 if __name__ == "__main__":
     main()
