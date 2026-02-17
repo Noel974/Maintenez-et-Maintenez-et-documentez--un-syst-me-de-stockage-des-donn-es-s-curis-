@@ -1,7 +1,17 @@
 import csv
 import sys
+import os
+from dotenv import load_dotenv
 
-CSV_FILE = "data/healthcare_dataset.csv"
+# Charger les variables d'environnement
+load_dotenv()
+
+CSV_FILE = os.getenv("CSV_FILE")
+
+if not CSV_FILE:
+    print("❌ Variable CSV_FILE non définie dans le .env")
+    sys.exit(1)
+
 
 # ==============================
 # CONFIGURATION
