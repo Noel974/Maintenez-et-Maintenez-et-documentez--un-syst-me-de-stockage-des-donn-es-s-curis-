@@ -2,16 +2,28 @@
 
 # Sommaire
 
-1. [Introduction](#1-introduction)
-   - [Contexte](#contexte)
-   - [Objectif technique](#objectif-technique)
+1. [Introduction](#1-Introduction)
+   - [Contexte](#Contexte)
+   - [Objectif technique](#Objectif-technique)
 2. [Outils et technologies](#outils-et-technologies)
-3. [Installation](#2-installation)
+3. [Installation et configuration](#2-Installation et configuration)
    - [MongoDB](#mongodb)
    - [Python](#python)
    - [Docker](#docker)
 4. [Déroulement](#4-deroulement)
+3.1 MongoDB  
+3.2 Python  
+3.3 Dépendances  
+3.4 Docker  
+3.5 Variables d’environnement
 
+Déroulement de la migration
+
+Structure du projet
+
+Branches Git
+
+Tests CRUD
 ---
 
 # 1 Introduction
@@ -247,6 +259,12 @@ mongodb://admin:admin123@localhost:27017/
 ```
 
 ---
+## git Hub 
+ deux branch sont créer un main et l'autre no-pandas 
+ dans main j'utilise pandas dans no-pandas je n'utilise pas pandas pour changer de branch 
+ ```bash 
+ git checkout (suivi du nom de la branch )
+ ```
 
 # 4 Déroulement
 
@@ -301,3 +319,4 @@ MONGO_COLLECTION : Nom de la collection dans laquelle les documents seront insé
 
 
 Le projet est maintenant prêt à être exécuté dans un environnement propre, isolé et reproductible.
+ Dans le dossier test on retrouvera tous les test Crud d'ou un fichier Create.py, un udapte.py et delete.py

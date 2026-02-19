@@ -17,21 +17,21 @@ if not CSV_FILE:
 # ==============================
 
 EXPECTED_COLUMNS = {
-    "Name": "object",
+    "Name": "str",
     "Age": "int64",
-    "Gender": "object",
-    "Blood Type": "object",
-    "Medical Condition": "object",
-    "Date of Admission": "object",
-    "Doctor": "object",
-    "Hospital": "object",
-    "Insurance Provider": "object",
+    "Gender": "str",
+    "Blood Type": "str",
+    "Medical Condition": "str",
+    "Date of Admission": "str",
+    "Doctor": "str",
+    "Hospital": "str",
+    "Insurance Provider": "str",
     "Billing Amount": "float64",
     "Room Number": "int64",
-    "Admission Type": "object",
-    "Discharge Date": "object",
-    "Medication": "object",
-    "Test Results": "object"
+    "Admission Type": "str",
+    "Discharge Date": "str",
+    "Medication": "str",
+    "Test Results": "str"
 }
 
 # ==============================
