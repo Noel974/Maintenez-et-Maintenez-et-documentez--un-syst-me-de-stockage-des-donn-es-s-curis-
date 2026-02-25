@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+
+  mongo:
+    image: mongo:7
+    container_name: mongodb_docker
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    env_file:
+      - .env.docker
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+
+  migration:
+    build: .
+    container_name: migration_container
+    depends_on:
+      - mongo
+    env_file:
+      - .env.docker
+    command: sh -c "sleep 10 && python script/migration.py"
+
+volumes:
+  mongo_data:

@@ -1,29 +1,20 @@
 # Migration de données médicales vers MongoDB (NoSQL)
 
+---
 # Sommaire
-
 1. [Introduction](#1-Introduction)
    - [Contexte](#Contexte)
    - [Objectif technique](#Objectif-technique)
 2. [Outils et technologies](#outils-et-technologies)
-3. [Installation et configuration](#2-Installation et configuration)
+3. [Installation et configuration](#2-Installatio-et-configuration)
    - [MongoDB](#mongodb)
    - [Python](#python)
    - [Docker](#docker)
+   - [Variables d’environnement](#Variables-d-environnement)
 4. [Déroulement](#4-deroulement)
-3.1 MongoDB  
-3.2 Python  
-3.3 Dépendances  
-3.4 Docker  
-3.5 Variables d’environnement
-
-Déroulement de la migration
-
-Structure du projet
-
-Branches Git
-
-Tests CRUD
+   -[Script](#script)
+   -[Crud](#crud)
+   -[Docker](#docker)
 ---
 
 # 1 Introduction
@@ -58,7 +49,7 @@ L’objectif est d’obtenir une base MongoDB cohérente, structurée et prête 
 
 ---
 
-# Outils et technologies
+# 2 Outils et technologies
 
 Le projet s’appuie sur les technologies suivantes :
 
@@ -71,54 +62,15 @@ Le projet s’appuie sur les technologies suivantes :
 
 ---
 
-# 2 Installation
+# 3 Installation et configuration
 
 Cette section décrit les prérequis nécessaires pour exécuter la migration ainsi que la configuration de l’environnement.
 
 ---
-
-## MongoDB
-
-MongoDB est la base de données utilisée pour stocker les données médicales après transformation.
-
-Dans ce projet, MongoDB est exécuté via **Docker**, ce qui permet :
-
-- Une installation simplifiée
-- Une isolation complète de l’environnement
-- Une reproductibilité sur n’importe quelle machine
-- Une suppression facile sans impact système
-
-👉 Aucune installation locale n’est nécessaire si Docker est utilisé.
-
-### Installation locale (optionnelle)
-
-Si vous souhaitez installer MongoDB en local :
-
-1. Télécharger MongoDB Community Edition :  
-   https://www.mongodb.com/try/download/community
-
-2. Installer selon votre système d’exploitation
-
-3. Vérifier l’installation :
-
-```bash
-mongod --version
-```
-
-### MongoDB Compass
-
-Pour visualiser les données de manière graphique, installer **MongoDB Compass** :
-
-https://www.mongodb.com/try/download/compass
-
----
-
 ## Python
-
 Python est utilisé pour lire, transformer et insérer les données dans MongoDB.
 
 ### Installation Python
-
 Télécharger Python depuis le site officiel :
 
 https://www.python.org/downloads/
@@ -225,26 +177,82 @@ pip install -r requirements.txt
 
 ---
 
+## MongoDB
+
+MongoDB est la base de données utilisée pour stocker les données médicales après transformation.
+
+Dans ce projet, MongoDB est exécuté via **Docker**, ce qui permet :
+
+- Une installation simplifiée
+- Une isolation complète de l’environnement
+- Une reproductibilité sur n’importe quelle machine
+- Une suppression facile sans impact système
+
+👉 Aucune installation locale n’est nécessaire si Docker est utilisé.
+
+### Installation locale (optionnelle)
+
+Si vous souhaitez installer MongoDB en local :
+
+1. Télécharger MongoDB Community Edition :  
+   https://www.mongodb.com/try/download/community
+
+2. Installer selon votre système d’exploitation
+
+3. Vérifier l’installation :
+
+```bash
+mongod --version
+```
+
+### MongoDB Compass
+
+Pour visualiser les données de manière graphique, installer **MongoDB Compass** :
+
+https://www.mongodb.com/try/download/compass
+
+---
+
+
+
+
+
 ## Docker
 
 Docker permet de lancer MongoDB dans un conteneur isolé.
-
+apres avoir installer docker creer le fichier dockerfile puis docker-compose.yml puis de executer les commande suivante
 ### Vérifier l’installation
-
 ```bash
-docker --version
+docker --version 
 ```
 
-### Lancer MongoDB avec Docker
+```bash
+docker volume create mongo_data
+```
+```bash
+docker volume create csv_data
+```
+```bash
+docker volume ls
+```
+```bash
+docker-compose up -d
+```
+```bash
+docker exec -it mongodb_docker mongosh -u Noel974 -p Emm@nuel974
+```
+test sur docker 
+```bash
+show dbs
+```
+```bash
+test> use healthcare_db
+```
 
 ```bash
-docker run -d \
-  --name mongodb_medical \
-  -p 27017:27017 \
-  -e MONGO_INITDB_ROOT_USERNAME=admin \
-  -e MONGO_INITDB_ROOT_PASSWORD=admin123 \
-  mongo:7
+db.ma_collection.find().limit(5)
 ```
+
 
 Vérifier que le conteneur est actif :
 
@@ -252,13 +260,6 @@ Vérifier que le conteneur est actif :
 docker ps
 ```
 
-MongoDB sera accessible à l’adresse :
-
-```
-mongodb://admin:admin123@localhost:27017/
-```
-
----
 ## git Hub 
  deux branch sont créer un main et l'autre no-pandas 
  dans main j'utilise pandas dans no-pandas je n'utilise pas pandas pour changer de branch 
@@ -268,10 +269,20 @@ mongodb://admin:admin123@localhost:27017/
 
 # 4 Déroulement
 
-## Étapes de la migration
+## Script
+Pour les script il faut que l'environement est activé une fois activé on peux lancer le script avec la commande 
+```bash 
+python script/nom_ du_script.py
+```
+Dans le script il un fichier automate.py elle permet de lancer les script en mm temps au lieu de faire individuel elle a pour but de faire le script test , testmigration, testcompoare 
+```bash 
+python script/nom_ du_script.py
+```
+## Crud
+Pour le crud elle se trouve dans le dossier test, elle contient 
+## Docker
 
 1. Lecture des fichiers CSV avec Pandas  
-2. Nettoyage des données (valeurs manquantes, formats, types)  
 3. Transformation en dictionnaires Python  
 4. Insertion des documents dans MongoDB  
 5. Vérification via MongoDB Compass  
