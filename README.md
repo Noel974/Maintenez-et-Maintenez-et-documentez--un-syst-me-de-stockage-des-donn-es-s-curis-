@@ -89,86 +89,80 @@ python3 --version
 
 ---
 
-### Installation des dépendances
+### Creation d'environement et installation des dependance
 
-Il est recommandé d’utiliser un environnement virtuel.
+Il est recommandé d’utiliser un environement virtuel.Et d'installer les dépendances.
 
-#### Création d’un environnement virtuel
+#### Création d’un environement virtuel
+Pour créer un environemment de taper la commande suivante dans le terminal
 
 ```bash
 python -m venv venv
 ```
-
-#### Activation de l’environnement
+##### Activation de l’environnement
+Pour activer l'environement une installer de taper cette commande selon votre type de pc :
 
 Windows :
-
 ```bash
 venv\Scripts\activate
 ```
+---
 
 Mac / Linux :
-
 ```bash
 source venv/bin/activate
 ```
-
 ---
+Une fois activé, le nom de l’environnement (venv) apparaît généralement dans le terminal, ce qui indique que toutes les installations de packages se feront uniquement dans cet environnement isolé, protégeant ainsi votre système et vos autres projets.
 
 ### Installation des packages nécessaires
+Installer des packages selon le type de projets a faire dans le cas de se projets j'ai installer pandas, pymongo, et python-dotenv.
 
-#### Pandas (lecture et transformation des CSV)
 
+##### Pandas (lecture et transformation des CSV)
+Pandas elle permet de  manipuler et analyser des données tabulaires de manière rapide et efficace.
 ```bash
 pip install pandas
 ```
-
 Vérifier l’installation :
 
 ```bash
 python -c "import pandas as pd; print(pd.__version__)"
 ```
-
----
-
-#### PyMongo (connexion à MongoDB)
-
+##### PyMongo (connexion à MongoDB)
+pymongo : bibliothèque Python pour connecter et manipuler des bases de données MongoDB directement depuis Python.
 ```bash
 pip install pymongo==4.7.2
 ```
-
 Vérifier :
-
 ```bash
 python -c "import pymongo; print(pymongo.__version__)"
 ```
-
----
-
-#### Python Dotenv (gestion des variables d’environnement)
-
+##### Python Dotenv (gestion des variables d’environnement)
+python-dotenv : bibliothèque Python pour gérer facilement les variables d’environnement depuis un fichier .env, sécurisant ainsi les informations sensibles et les configurations du projet.
 ```bash
 pip install python-dotenv==1.0.1
 ```
-
 Vérifier :
 
 ```bash
 pip show python-dotenv
 ```
 
----
-
 ### Fichier requirements.txt
 
-Créer un fichier `requirements.txt` :
-
+Créer un fichier `requirements.txt` .
+Apres avoir installer les packages dans le terminal taper cette commande 
+```bash 
+pip freeze > requirements.txt
+```
+Elle va créer le fichier requirement et on retrouvera c'est information a l'intérieur 
 ```
 pandas
 pymongo==4.7.2
 python-dotenv==1.0.1
 ```
-
+Une fois le fichier créer 
 Installer toutes les dépendances :
 
 ```bash
@@ -188,7 +182,7 @@ Dans ce projet, MongoDB est exécuté via **Docker**, ce qui permet :
 - Une reproductibilité sur n’importe quelle machine
 - Une suppression facile sans impact système
 
-👉 Aucune installation locale n’est nécessaire si Docker est utilisé.
+ Aucune installation locale n’est nécessaire si Docker est utilisé.
 
 ### Installation locale (optionnelle)
 
@@ -212,10 +206,6 @@ Pour visualiser les données de manière graphique, installer **MongoDB Compass*
 https://www.mongodb.com/try/download/compass
 
 ---
-
-
-
-
 
 ## Docker
 
@@ -267,8 +257,30 @@ docker ps
  git checkout (suivi du nom de la branch )
  ```
 
-# 4 Déroulement
+# 4 Déroulement 
+Projet 
 
+```text
+Projet
+│
+├─ script/
+│     ├─ automate.py
+│     ├─test.py
+│     ├─migration.py
+│     ├─testmigration.py
+│     └─ testcomapre.py
+├─ data/
+│  └─ dataset.csv
+├─test/
+│     ├─create.py
+│     ├─update.py
+│     └─delete.py
+├─docker-compoase.yml
+├─dockerfile 
+├─ .env
+├─ .env.docker
+└─ requirements.txt
+```
 ## Script
 Pour les script il faut que l'environement est activé une fois activé on peux lancer le script avec la commande 
 ```bash 
@@ -288,23 +300,6 @@ Pour le crud elle se trouve dans le dossier test, elle contient
 5. Vérification via MongoDB Compass  
 
 ---
-
-## Structure recommandée du projet
-
-```
-project/
-│
-├── data/                 # Fichiers CSV
-├── src/                  # Scripts Python
-├── .env                  # Variables d’environnement
-├── requirements.txt
-└── README.md
-```
-
----
-
----
-
 ## Configuration des variables d’environnement (.env)
 
 Afin de sécuriser les informations sensibles (identifiants, mot de passe, URI MongoDB), la connexion à MongoDB est configurée via un fichier `.env`.

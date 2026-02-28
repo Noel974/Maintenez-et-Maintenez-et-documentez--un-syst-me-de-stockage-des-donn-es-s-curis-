@@ -34,13 +34,13 @@ def main():
         db = client[MONGO_DB_NAME]
         collection = db[MONGO_COLLECTION]
 
-        print("✅ Connexion à MongoDB réussie.")
+        print(" Connexion à MongoDB réussie.")
 
         # Lecture CSV
         df = pd.read_csv(CSV_FILE)
 
         if df.empty:
-            print("⚠️ Le fichier CSV est vide.")
+            print(" Le fichier CSV est vide.")
             return
 
         # Remplacer les NaN par None (important pour MongoDB)
@@ -50,15 +50,15 @@ def main():
 
         # Insertion
         result = collection.insert_many(records)
-        print(f"✅ {len(result.inserted_ids)} documents insérés avec succès.")
+        print(f"{len(result.inserted_ids)} documents insérés avec succès.")
 
     except Exception as e:
-        print("❌ Erreur :", e)
+        print(" Erreur :", e)
 
     finally:
         if client:
             client.close()
-            print("🔒 Connexion MongoDB fermée.")
+            print(" Connexion MongoDB fermée.")
 
 
 if __name__ == "__main__":
