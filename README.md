@@ -216,39 +216,6 @@ apres avoir installer docker creer le fichier dockerfile puis docker-compose.yml
 docker --version 
 ```
 
-```bash
-docker volume create mongo_data
-```
-```bash
-docker volume create csv_data
-```
-```bash
-docker volume ls
-```
-```bash
-docker-compose up -d
-```
-```bash
-docker exec -it mongodb_docker mongosh -u Noel974 -p Emm@nuel974
-```
-test sur docker 
-```bash
-show dbs
-```
-```bash
-test> use healthcare_db
-```
-
-```bash
-db.ma_collection.find().limit(5)
-```
-
-
-Vérifier que le conteneur est actif :
-
-```bash
-docker ps
-```
 
 ## git Hub 
  deux branch sont créer un main et l'autre no-pandas 
@@ -263,66 +230,113 @@ Projet
 ```text
 Projet
 │
-├─ script/
-│     ├─ automate.py
-│     ├─test.py
-│     ├─migration.py
-│     ├─testmigration.py
-│     └─ testcomapre.py
-├─ data/
-│  └─ dataset.csv
-├─test/
-│     ├─create.py
-│     ├─update.py
-│     └─delete.py
-├─docker-compoase.yml
-├─dockerfile 
-├─ .env
-├─ .env.docker
-└─ requirements.txt
+├─ script/                            # Dossier script du projet
+│     ├─ automate.py                  #Fichier automate elle execute en même temps le test du fichier csv et  apres migration et test comparaison
+│     ├─dictionnaire.py               #Définitions et mappings des champs
+│     ├─test.py                       #Test fichier Csv avant migration 
+│     ├─migration.py                  #Mirgartion csv vers mongodb
+│     ├─testmigration.py              #Test apres migration
+│     └─ testcomapre.py               #Test de comparaison entre csv et mongodb
+├─ data/                              #Dossier contenant la data
+│  └─ healthcare_dataset.csv          #le fichier csv
+├─test/                               #Dossier Crud 
+│     ├─create.py                     #Create permet de créer des contenu
+│     ├─update.py                     #Update mettre a jour les contenu
+│     └─delete.py                     #Delete supprimer les contenu
+├─docker-compoase.yml                 #Configuration Docker Compose
+├─dockerfile                          #Fichier Docker pour l’image du projet
+├─ .env                               #Variables d’environnement local
+├─ .env.docker                        #Variables d’environnement pour docker
+└─ requirements.txt                   #Liste des dépendances Python
 ```
+## Création du fichier `.env`
+
+Créer un fichier `.env` à la racine du projet se fichier permettra d'avoir des variable pour les script retrouver un exemple dans le projet et ou voici un exemple.
+---
+MONGO_USER=votre nom 
+MONGO_PASSWORD=votre mot passe 
+MONGO_HOST=localhost
+MONGO_PORT=27017
+MONGO_DB_NAME=votre nom de la base
+MONGO_COLLECTION= votre nom de collection 
+CSV_FILE=data/healthcare_dataset.csv
+---
 ## Script
-Pour les script il faut que l'environement est activé une fois activé on peux lancer le script avec la commande 
+Dans le dossier **script** elle est composé de:
+   1.Automate.py: Elle permet une fois éxécuter de lancer en simultanément le fichier test.py , testmigration.py et testcompare.py
+   2.dictionnaire.py : Il permet de générer dynamiquement la structure attendue d’un fichier CSV
+   3.test.py : vérifie la conformité des colonnes, des types de données, des valeurs manquantes, des doublons et la validité des âges avant toute migration vers la base de données.
+   4.migration.py : Permet de vers la migration vers mongodb
+   5.testmigration.py : vérifie l’intégrité des documents stockés (présence des champs attendus, types de données, valeurs manquantes, doublons et validité des âges) afin de garantir la conformité des données après migration.
+   6.testcompare.oy:  compare les données sources et les données migrées (structure, nombre de lignes, colonnes et contenu détaillé) afin de valider l’intégrité complète de la migration.
+
+Pour éxécuter les script il faut que l'environement est activé une fois activé on peux lancer le script avec la commande 
 ```bash 
 python script/nom_ du_script.py
 ```
-Dans le script il un fichier automate.py elle permet de lancer les script en mm temps au lieu de faire individuel elle a pour but de faire le script test , testmigration, testcompoare 
+Pour la partie  automate.py elle permet de lancer les script en mm temps au lieu de faire individuel elle a pour but de faire le script test , testmigration, testcompoare 
 ```bash 
 python script/nom_ du_script.py
 ```
 ## Crud
 Pour le crud elle se trouve dans le dossier test, elle contient 
+
 ## Docker
-
-1. Lecture des fichiers CSV avec Pandas  
-3. Transformation en dictionnaires Python  
-4. Insertion des documents dans MongoDB  
-5. Vérification via MongoDB Compass  
-
+### Creation D'environement .env.docker 
+Créer un fichier `.env.docker` à la racine du projet. Ce fichier permet de définir les variables d’environnement utilisées par les services Docker
 ---
-## Configuration des variables d’environnement (.env)
-
-Afin de sécuriser les informations sensibles (identifiants, mot de passe, URI MongoDB), la connexion à MongoDB est configurée via un fichier `.env`.
-
-Cette méthode permet :
-
-- De ne pas exposer les identifiants dans le code source
-- De faciliter la configuration selon l’environnement (développement, production)
-- D’améliorer la sécurité du projet
-
+MONGO_USER=votre nom 
+MONGO_PASSWORD=votre mot passe 
+MONGO_HOST=mongo
+MONGO_PORT=27017
+MONGO_DB_NAME=votre nom de la base
+MONGO_COLLECTION= votre nom de collection 
+CSV_FILE=data/healthcare_dataset.csv
 ---
+### Déroulement Docker
+Creation de **dockerfile**.Le Dockerfile permet de construire l’image Docker de l’application Python.
+**Docker Compose** coordonne la base MongoDB et le script de migration pour exécuter le projet dans un environnement conteneurisé.
+Une fois créer les fichier dockerfile et docker-compose.ymml pour réaliser le projet voici les commande:
 
-### Création du fichier `.env`
-
-Créer un fichier `.env` à la racine du projet :
-Description des variables
-
-MONGO_URI : Chaîne de connexion à MongoDB
-
-MONGO_DB_NAME : Nom de la base de données cible
-
-MONGO_COLLECTION : Nom de la collection dans laquelle les documents seront insérés
-
-
-Le projet est maintenant prêt à être exécuté dans un environnement propre, isolé et reproductible.
- Dans le dossier test on retrouvera tous les test Crud d'ou un fichier Create.py, un udapte.py et delete.py
+Perme de créer le volume 
+```bash
+docker volume create mongo_data
+```
+Permet de véerifier si le volume est bien créer 
+```bash
+docker volume ls
+```
+Lancement d'installation et execution du container 
+```bash
+docker-compose up -d --build
+```
+Lancement du projet dans docker ne pas pas oublier de remplacer -u **** par votre nom et -p **** par votre mot passe renseigné dans votre .env.docker
+```bash
+docker exec -it mongodb_docker mongosh -u **** -p ****
+```
+test sur docker 
+vérification de tables 
+```bash
+show dbs
+```
+Vérification de la table  
+```bash
+test> use healthcare
+```
+Vérification des collection 
+```bash
+test> show collections
+```
+Vérification des collection 
+```bash
+test> db.getCollectionNames().
+```
+test de la collection 
+```bash
+db.ma_collection.find().limit(5)
+```
+en cas de bug cette commande permet de voir
+Vérifier que le conteneur est actif :
+```bash
+docker ps
+```
