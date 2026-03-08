@@ -293,6 +293,67 @@ MONGO_DB_NAME=votre nom de la base
 MONGO_COLLECTION= votre nom de collection 
 CSV_FILE=data/healthcare_dataset.csv
 ---
+### Système d’authentification ainsi que les rôles utilisateurs 
+Creer un fichier init-mongo.js a la racine puis d'exuter la commande 
+```bash 
+mongosh init-mongo.js
+```
+Une fois lancer on peut se connecté avec docker grace a la commande suivante 
+```bash 
+docker exec -it mongodb_docker mongosh -u *** -p *** --authenticationDatabase healtcare
+```
+une fois connecter on fontion de l'utilisateur de faire 
+```bash 
+show dbs 
+```
+puis de faire pour aller dans la collection 
+```bash 
+use healtcare
+```
+Une fois que tous est bien mi en place on peut alors tester  avec une insert 
+```bash 
+db.Patients.insertOne({test: 1})
+```
+si on c'est l'admin= healtcare ou le technicien on recoit un message que l'insert est ok 
+```bash 
+{
+  acknowledged: true,
+  insertedId: ObjectId('69add2f87c42a1a1c08563b1')
+}
+```
+dans l'autre cas si c'est le client  on recoit un message 
+```bash 
+MongoServerError[Unauthorized]: not authorized on healtcare to execute command { insert: "Patients", documents: [ { test: 1, _id: ObjectId('69add699cb7b77a2928563b1') } ], ordered: true, lsid: { id: UUID("16f2663a-36d9-4693-91a9-e32a1c917c2f") }, $db: "healtcare" }
+```
+seul l'admin et le tehcnicien peux supprimer avec cette commande 
+```bash 
+db.Patients.deleteOne({ test: 1 })
+```
+et de recevoir un message en quoi c'est bien supprimer 
+```bash
+{ acknowledged: true, deletedCount: 1 }
+```
+Les trois utilisateur peut taper cette commande qui permet de voir le nombre de ligne 
+```bash 
+db.Patients.countDocuments()
+```
+Un tableau qui représente le schéma de chaque utilisateur avec leur propre usage 
+
+| Role     | Permissions | Usage |
+|----------|-----------|-----------|
+| healtcare|Droits complets sur la base| accès total |
+| technicien | Lecture + écriture + gestion des collections  |  Lecture + écriture  |
+| client | Accès en lecture seule | Analyse des données  |
+
+
+
+
+
+
+
+
+db.Patients.countDocuments()
+
 ### Déroulement Docker
 Creation de **dockerfile**.Le Dockerfile permet de construire l’image Docker de l’application Python.
 **Docker Compose** coordonne la base MongoDB et le script de migration pour exécuter le projet dans un environnement conteneurisé.
